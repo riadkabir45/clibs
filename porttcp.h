@@ -69,7 +69,7 @@ class TCP{
 
         bool taccept(){//Accept connection
             int c = sizeof(struct sockaddr_in);
-	        sClient = accept(sLink , (struct sockaddr *)&cClient, &c);
+	          sClient = accept(sLink , (struct sockaddr *)&cClient, &c);
             if (sClient == INVALID_SOCKET)
                 return false;
             return true;
@@ -115,8 +115,8 @@ class TCP{
 
 class TCP{
         private:
-        int sLink;
-        struct sockaddr_in sDescrip;
+        int sLink,sClient;
+        struct sockaddr_in sDescrip,cClient;
         public:
         bool addr(const char *ip,int port){
             bool name = false;
@@ -160,6 +160,21 @@ class TCP{
             if((recv_size = recv(sLink , reply , size , 0)) < 0)
                     return false;
             //reply[recv_size] = '\0';
+            return true;
+        }
+        
+        bool tbind(){//Bind system on target
+            if( bind(sLink ,(struct sockaddr *)&sDescrip , sizeof(sDescrip)) < 0)
+                return false;
+            listen(sLink , 3);
+            return true;
+        }
+        
+        bool taccept(){//Accept connection
+            int c = sizeof(struct sockaddr_in);
+	          sClient = accept(sLink , (struct sockaddr *)&cClient, (socklen_t*)&c);
+            if (sClient < 0)
+                return false;
             return true;
         }
 };
