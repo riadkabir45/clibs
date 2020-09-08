@@ -126,6 +126,12 @@ class TCP{
             //server = false;
             return true;
         }
+        
+        bool link(){//Connect to target
+            if (connect(sLink , (struct sockaddr *)&sDescrip , sizeof(sDescrip)) < 0)
+                return false;
+            return true;
+        }
 };
 
 #endif
