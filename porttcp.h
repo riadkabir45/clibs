@@ -141,7 +141,7 @@ class TCP{
         
         bool trecv(char *reply,int size){//Recv data
             int recv_size = 0;
-            if((recv_size = recv(sLink , reply , size , 0)) == SOCKET_ERROR)
+            if((recv_size = recv(sLink , reply , size , 0)) < 0)
                     return false;
             //reply[recv_size] = '\0';
             return true;
