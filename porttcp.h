@@ -47,10 +47,10 @@ class TCP{
         bool addr(int port){//Set host with ip
             if((sLink = socket(AF_INET , SOCK_STREAM , 0 )) == INVALID_SOCKET)
                 return false;
-                sDescrip.sin_addr.s_addr = INADDR_ANY;
-	            sDescrip.sin_family = AF_INET;
-	            sDescrip.sin_port = htons( port );
-                server = true;
+            sDescrip.sin_addr.s_addr = INADDR_ANY;
+	          sDescrip.sin_family = AF_INET;
+	          sDescrip.sin_port = htons( port );
+            server = true;
             return true;
         }
 
@@ -117,6 +117,7 @@ class TCP{
         private:
         int sLink,sClient;
         struct sockaddr_in sDescrip,cClient;
+        bool server;
         public:
         bool addr(const char *ip,int port){
             bool name = false;
@@ -139,7 +140,17 @@ class TCP{
                 sDescrip.sin_addr.s_addr = inet_addr(ip);
             sDescrip.sin_family = AF_INET;
 	          sDescrip.sin_port = htons( port );
-            //server = false;
+            server = false;
+            return true;
+        }
+        
+        bool addr(int port){//Set host with ip
+            if((sLink = socket(AF_INET , SOCK_STREAM , 0 )) == -1)
+                return false;
+            sDescrip.sin_addr.s_addr = INADDR_ANY;
+	          sDescrip.sin_family = AF_INET;
+	          sDescrip.sin_port = htons( port );
+            server = true;
             return true;
         }
         
@@ -149,24 +160,35 @@ class TCP{
             return true;
         }
         
+        bool tbind(){//Bind system on target
+            if( bind(sLink ,(struct sockaddr *)&sDescrip , sizeof(sDescrip)) < 0)
+                return false;
+            listen(sLink , 3);
+            return true;
+        }
+        
         bool tsend(const char *message,int size){//Send data
-            if( send(sLink , message , size , 0) < 0)
+            if(server){
+                if( send(sClient , message , size , 0) < 0)
                     return false;
+
+            }else{
+                if( send(sLink , message , size , 0) < 0)
+                    return false;
+            }
             return true;
         }
         
         bool trecv(char *reply,int size){//Recv data
             int recv_size = 0;
-            if((recv_size = recv(sLink , reply , size , 0)) < 0)
+            if(server){
+                if((recv_size = recv(sClient , reply , size , 0)) < 0)
                     return false;
+            }else{
+                if((recv_size = recv(sLink , reply , size , 0)) < 0)
+                    return false;
+            }
             //reply[recv_size] = '\0';
-            return true;
-        }
-        
-        bool tbind(){//Bind system on target
-            if( bind(sLink ,(struct sockaddr *)&sDescrip , sizeof(sDescrip)) < 0)
-                return false;
-            listen(sLink , 3);
             return true;
         }
         
