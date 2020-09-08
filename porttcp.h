@@ -199,6 +199,10 @@ class TCP{
                 return false;
             return true;
         }
+        
+        void close(){//Close socket
+            free(sLink);
+        }
 };
 
 #endif
