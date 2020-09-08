@@ -109,8 +109,9 @@ class TCP{
 
 #else
 
-#include<sys/socket.h>
-#include<arpa/inet.h>	
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netdb.h>
 
 class TCP{
         private:
@@ -118,9 +119,24 @@ class TCP{
         struct sockaddr_in sDescrip;
         public:
         bool addr(const char *ip,int port){
+            bool name = false;
             if((sLink = socket(AF_INET , SOCK_STREAM , 0 )) == -1)
                 return false;
-            sDescrip.sin_addr.s_addr = inet_addr(ip);
+            for(int i=0;ip[i]!='\0';i++)
+                if((ip[i]  < '0' or ip[i] > '9') and ip[i] != '.'){
+                    name = true;
+                    break;
+                }
+            if(name){
+                struct hostent *url;
+	              struct in_addr **addr_list;
+                if ( (url = gethostbyname( ip ) ) == NULL) 
+                    return false;
+                addr_list = (struct in_addr **) url->h_addr_list;
+                for(int i = 0; addr_list[i] != NULL; i++)
+                    sDescrip.sin_addr.s_addr = inet_addr(inet_ntoa(*addr_list[i]));
+            }else
+                sDescrip.sin_addr.s_addr = inet_addr(ip);
             sDescrip.sin_family = AF_INET;
 	          sDescrip.sin_port = htons( port );
             //server = false;
