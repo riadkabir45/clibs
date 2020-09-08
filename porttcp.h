@@ -30,7 +30,7 @@ class TCP{
                 }
             if(name){
                 struct hostent *url;
-	            struct in_addr **addr_list;
+	              struct in_addr **addr_list;
                 if ( (url = gethostbyname( ip ) ) == NULL) 
                     return false;
                 addr_list = (struct in_addr **) url->h_addr_list;
@@ -39,12 +39,12 @@ class TCP{
             }else
                 sDescrip.sin_addr.s_addr = inet_addr(ip);
             sDescrip.sin_family = AF_INET;
-	        sDescrip.sin_port = htons( port );
+	          sDescrip.sin_port = htons( port );
             server = false;
             return true;
         }
 
-        bool addr(int port){//Set target host with ip
+        bool addr(int port){//Set host with ip
             if((sLink = socket(AF_INET , SOCK_STREAM , 0 )) == INVALID_SOCKET)
                 return false;
                 sDescrip.sin_addr.s_addr = INADDR_ANY;
@@ -110,10 +110,22 @@ class TCP{
 #else
 
 #include<sys/socket.h>
+#include<arpa/inet.h>	
 
 class TCP{
         private:
+        int sLink;
+        struct sockaddr_in sDescrip;
         public:
+        bool addr(const char *ip,int port){
+            if((sLink = socket(AF_INET , SOCK_STREAM , 0 )) == -1)
+                return false;
+            sDescrip.sin_addr.s_addr = inet_addr(ip);
+            sDescrip.sin_family = AF_INET;
+	          sDescrip.sin_port = htons( port );
+            //server = false;
+            return true;
+        }
 };
 
 #endif
