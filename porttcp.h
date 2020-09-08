@@ -132,6 +132,12 @@ class TCP{
                 return false;
             return true;
         }
+        
+        bool tsend(const char *message,int size){//Send data
+            if( send(sLink , message , size , 0) < 0)
+                    return false;
+            return true;
+        }
 };
 
 #endif
