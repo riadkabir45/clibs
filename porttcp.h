@@ -14,12 +14,12 @@ class TCP{
         bool server;
         bool bInit = false;
     public:
-        TCP(){
+        TCP(){//Initilize Winsock2
             if (WSAStartup(MAKEWORD(2,2),&wsa) == 0)
                 bInit = true;
         }
 
-        bool addr(const char *ip,int port){
+        bool addr(const char *ip,int port){//Set target host with name
             bool name = false;
             if((sLink = socket(AF_INET , SOCK_STREAM , 0 )) == INVALID_SOCKET)
                 return false;
@@ -44,7 +44,7 @@ class TCP{
             return true;
         }
 
-        bool addr(int port){
+        bool addr(int port){//Set target host with ip
             if((sLink = socket(AF_INET , SOCK_STREAM , 0 )) == INVALID_SOCKET)
                 return false;
                 sDescrip.sin_addr.s_addr = INADDR_ANY;
@@ -54,20 +54,20 @@ class TCP{
             return true;
         }
 
-        bool link(){
+        bool link(){//Connect to target
             if (connect(sLink , (struct sockaddr *)&sDescrip , sizeof(sDescrip)) < 0)
                 return false;
             return true;
         }
 
-        bool tbind(){
+        bool tbind(){//Bind system on target
             if( bind(sLink ,(struct sockaddr *)&sDescrip , sizeof(sDescrip)) == SOCKET_ERROR)
                 return false;
             listen(sLink , 3);
             return true;
         }
 
-        bool taccept(){
+        bool taccept(){//Accept connection
             int c = sizeof(struct sockaddr_in);
 	        sClient = accept(sLink , (struct sockaddr *)&cClient, &c);
             if (sClient == INVALID_SOCKET)
@@ -75,7 +75,7 @@ class TCP{
             return true;
         }
 
-        bool tsend(const char *message,int size){
+        bool tsend(const char *message,int size){//Send data
             if(server){
                 if( send(sClient , message , size , 0) < 0)
                     return false;
@@ -87,7 +87,7 @@ class TCP{
             return true;
         }
 
-        bool trecv(char *reply,int size){
+        bool trecv(char *reply,int size){//Recv data
             int recv_size = 0;
             if(server){
                 if((recv_size = recv(sClient , reply , size , 0)) == SOCKET_ERROR)
@@ -100,7 +100,7 @@ class TCP{
             return true;
         }
 
-        bool close(){
+        bool close(){//Close socket
             if(closesocket(sLink) != 0)
                 return false;
             return true;
