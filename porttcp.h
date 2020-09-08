@@ -138,6 +138,14 @@ class TCP{
                     return false;
             return true;
         }
+        
+        bool trecv(char *reply,int size){//Recv data
+            int recv_size = 0;
+            if((recv_size = recv(sLink , reply , size , 0)) == SOCKET_ERROR)
+                    return false;
+            //reply[recv_size] = '\0';
+            return true;
+        }
 };
 
 #endif
