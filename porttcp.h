@@ -19,6 +19,10 @@ class TCP{
                 bInit = true;
         }
 
+	~TCP(){
+		WSACleanup();
+	}
+
         bool addr(const char *ip,int port){//Set target host with name
             bool name = false;
             if((sLink = socket(AF_INET , SOCK_STREAM , 0 )) == INVALID_SOCKET)
