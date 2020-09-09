@@ -100,7 +100,7 @@ class TCP{
             return true;
         }
 
-        bool close(){//Close socket
+        bool tclose(){//Close socket
             if(closesocket(sLink) != 0)
                 return false;
             return true;
@@ -112,6 +112,7 @@ class TCP{
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <unistd.h>
 
 class TCP{
         private:
@@ -200,8 +201,8 @@ class TCP{
             return true;
         }
         
-        void close(){//Close socket
-            free(sLink);
+        void tclose(){//Close socket
+            close(sLink);
         }
 };
 
