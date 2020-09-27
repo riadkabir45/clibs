@@ -7,6 +7,7 @@
 #include "string.h"
 
 void despace(char arg[],int size);
+void cleanSpace(char arg[]);
 void revstr(char *text);
 void intstr(int val, char num[]);
 int strint(char num[]);
@@ -28,6 +29,19 @@ void despace(char arg[],int size){
 		i++;
 	}
 	arg[j] = '\0';
+}
+
+void cleanSpace(char arg[]){
+	int i = 0;
+	int j = 0;
+	while(arg[j] != '\0'){
+		while(arg[j] == ' ' and arg[j+1] == ' ')
+			j++;
+		arg[i] = arg[j];
+		i++;
+		j++;
+	}
+	arg[i] = '\0';
 }
 
 void revstr(char *text){
