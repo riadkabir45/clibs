@@ -6,7 +6,7 @@
 #include "math.h"
 #include "string.h"
 
-void despace(char arg[],int size);
+void despace(char arg[]);
 void cleanSpace(char arg[]);
 void revstr(char *text);
 void intstr(int val, char num[]);
@@ -16,19 +16,18 @@ void strcpyex(char s[],char d[],int start,int dis);
 int strfind(char s[],char t[],int n);
 int sparse(char s[],char t[]);
 
-void despace(char arg[],int size){
-	char tmp[size];
-	strcpy(tmp,arg);
+void despace(char arg[]){
 	int i = 0;
 	int j = 0;
-	while(tmp[i] != '\0'){
-		if(tmp[i] != ' '){
-		arg[j] = tmp[i];
+	while(arg[j] != '\0'){
+		while(arg[j] == ' '){
 			j++;
 		}
+		arg[i] = arg[j];
+		j++;
 		i++;
 	}
-	arg[j] = '\0';
+	arg[i] = '\0';
 }
 
 void cleanSpace(char arg[]){
