@@ -37,6 +37,10 @@ void cleanSpace(char arg[]){
 	while(arg[j] != '\0'){
 		while(arg[j] == ' ' and arg[j+1] == ' ')
 			j++;
+		if(arg[j] == ' ' and arg[j+1] == '\0')
+			break;
+		if(i == 0 and arg[j] == ' ')
+			j++;
 		arg[i] = arg[j];
 		i++;
 		j++;
